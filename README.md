@@ -9,22 +9,11 @@ It currently only supports the following operations:
    * `get-all` (aka “list”)
    * `delete`
 
-On the following resources:
+On the following resources: tickets, views, ticket fields, users, macros, automations, triggers, targets, user fields and groups.
 
-   * tickets
-   * views
-   * ticket-fields
-   * users
-   * macros
-   * automations
-   * triggers
-   * targets
-   * user-fields
-   * groups
+Don't worry, more resources and endpoints are coming soon — this is mainly a one-hundred-lines-of-code, hacked-together-in-an-afternoon proof-of-concept. But there's still lots of stuff you could build with it.
 
-Don't worry, more resources and endpoints are coming soon — this is mainly a one-hundred-lines-of-code, hacked-together-in-an-afternoon proof-of-concept. But there's still lots of stuff you could built with it.
-
-The library takes care of turning your idiomatic Clojure data (e.g. ```{:custom-field {:id 20 :value 13}}```) into the format that the API is expecting (e.g. ```{"custom_field": {"id": 20, "value": 13}}```) so that your app doesn't even need to think about JSON or hyphens-vs-underscores or any of those boring things.
+The library takes care of turning your idiomatic Clojure data (e.g. ```{:custom-field {:id 20 :value 13}}```) into the format that the API is expecting (e.g. ```{"custom_field": {"id": 20, "value": 13}}```). Your app doesn't need to deal with JSON or hyphens-vs-underscores or any of those boring things!
 
 Currently only supports auth-ing via OAuth token.
 
