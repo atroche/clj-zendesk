@@ -1,6 +1,6 @@
 # clj-zendesk
 
-A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/core/introduction). Still very barebones and untested, so use at your own risk.
+A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/core/introduction).
 
 It currently only supports the following operations:
 
