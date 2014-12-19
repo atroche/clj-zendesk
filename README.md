@@ -11,18 +11,22 @@ It currently only supports the following operations:
 
 On the following resources:
 
-   * :tickets
-   * :views
-   * :ticket-fields
-   * :users
-   * :macros
-   * :automations
-   * :triggers
-   * :targets
-   * :user-fields
-   * :groups
+   * tickets
+   * views
+   * ticket-fields
+   * users
+   * macros
+   * automations
+   * triggers
+   * targets
+   * user-fields
+   * groups
 
-In my defence, I've only spent a few hours on this, and it's around one hundred lines of code.
+Don't worry, more resources and endpoints are coming soon — this is mainly a one-hundred-lines-of-code, hacked-together-in-an-afternoon proof-of-concept. But there's still lots of stuff you could built with it.
+
+The library takes care of turning your idiomatic Clojure data (e.g. ```{:custom-field {:id 20 :value 13}}```) into the format that the API is expecting (e.g. ```{"custom_field": {"id": 20, "value": 13}}```) so that your app doesn't even need to think about JSON or hyphens-vs-underscores or any of those boring things.
+
+Currently only supports auth-ing via OAuth token.
 
 ## Installation
 
