@@ -4,10 +4,10 @@ A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/
 
 It currently only supports the following operations:
 
-   * create
-   * list (aka `get-all`)
-   * show (aka `get`)
-   * delete
+   * ```create```
+   * ```get``` (aka “show”)
+   * `get-all` (aka “list”)
+   * `delete`
 
 On the following resources:
 
