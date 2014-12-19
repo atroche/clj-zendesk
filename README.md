@@ -1,6 +1,6 @@
 # clj-zendesk
 
-A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/core/introduction).
+A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/core/introduction). PRs, feature requests and bug reports very welcome!
 
 It currently only supports the following operations:
 
@@ -9,7 +9,7 @@ It currently only supports the following operations:
    * `get-all` (aka “list”)
    * `delete`
 
-On the following resources: tickets, views, ticket fields, users, macros, automations, triggers, targets, user fields and groups.
+…on the following resources: tickets, views, ticket fields, users, macros, automations, triggers, targets, user fields and groups.
 
 Don't worry, more resources and endpoints are coming soon — this is mainly a one-hundred-lines-of-code, hacked-together-in-an-afternoon proof-of-concept. But there's still lots of stuff you could build with it.
 
