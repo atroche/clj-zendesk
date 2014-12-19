@@ -24,6 +24,10 @@ On the following resources:
 
 In my defence, I've only spent a few hours on this, and it's around one hundred lines of code.
 
+## Installation
+
+Just add ```[clj-zendesk "0.1.0"]``` to `:dependencies` in your project's `profile.clj`.
+
 ## Usage
 
 ```clojure
