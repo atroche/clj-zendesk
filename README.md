@@ -2,6 +2,8 @@
 
 A client for the [Zendesk REST API](https://developer.zendesk.com/rest_api/docs/core/introduction). PRs, feature requests and bug reports very welcome!
 
+Check out this [extensively annotated source code / documentation](http://atroche.github.io/clj-zendesk).
+
 It currently only supports the following operations:
 
    * ```create```
