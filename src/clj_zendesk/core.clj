@@ -32,7 +32,7 @@
 
   [subdomain domain email token]
   (def auth-creds [(str email "/token") token])
-  (def api-url (format "https://%s.%s" subdomain domain)))
+  (def api-url (format "https://%s.%s/api/v2/" subdomain domain)))
 
 
 (defn format-url
