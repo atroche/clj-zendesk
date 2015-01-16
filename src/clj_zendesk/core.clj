@@ -108,6 +108,8 @@
 ;; `create` corresponds to a POST on the root of a resource (e.g. /api/v2/users.json)
 
 ;; `delete` corresponds to a GET on a specific resource (e.g. /api/v2//users/3.json)
+
+;; I haven't implemented `update` yet because I forgot and haven't had time!
 (defrecord Resource
   [resource-name]
   StandardOperations
@@ -141,20 +143,28 @@
          ~resource-symbol#))))
 
 
+(defmacro defresources
+  "Takes a bunch of resource names and does defresource on all of them.
+
+  E.g. `(defresource :tickets :users)` becomes `(do (defresource :tickets) (defresource :users))`"
+  [& args]
+  `(do
+     ~@(for [resource args]
+      `(defresource ~resource))))
+
+
 ;; Define a bunch of resources. These are ones where standard operations Just Work™
 ;; out of the box. There are probably more, I just haven't bothered to check and add them :)
 
-;; Good news is that if there's one you want to use you can just do `(defresource :my-new-resource)` and you'll be able to e.g. `(get-all MyNewResources)`.
-
-;; I want to create a `defresources` macro to DRY this up, I just haven't had time.
-(defresource :tickets)
-(defresource :views)
-(defresource :ticket-fields)
-(defresource :users)
-(defresource :macros)
-(defresource :automations)
-(defresource :triggers)
-(defresource :targets)
-(defresource :user-fields)
-(defresource :groups)
+;; Good news is that if there's one you want to use you can just do `(defresource :my-new-resource)` and you'll be able to e.g. `(get-all MyNewResources)`. Or you could just add it to the list below and make a pull request =)
+(defresources :tickets
+              :views
+              :ticket-fields
+              :users
+              :macros
+              :automations
+              :triggers
+              :targets
+              :user-fields
+              :groups)
 
