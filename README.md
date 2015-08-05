@@ -27,7 +27,7 @@ Just add ```[clj-zendesk "0.1.0"]``` to `:dependencies` in your project's `profi
 
 ```clojure
 user> (use 'clj-zendesk.core)
-user> (setup "zendesk_subdomain" "zendesk_email@zendesk.com" "YOURAPITOKEN")
+user> (setup "zendesk_subdomain" "zendesk.com" "zendesk_email@zendesk.com" "YOURAPITOKEN")
 user> (get-all Users)
 [{:role "end-user", :updated-at "2013-11-29T00:16:30Z", :tags [], :email "end@user.com", :chat-only false,  … etc.
 
