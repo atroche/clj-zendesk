@@ -21,10 +21,11 @@
             [camel-snake-kebab.core :refer [->snake_case ->CamelCase]]
             [cheshire.core :refer [generate-string parse-string]]))
 
-(def ^:dynamic defaults {:domain "zendesk.com"
+
+(def ^:dynamic defaults {:domain    "zendesk.com"
                          :subdomain nil
-                         :email nil
-                         :token nil})
+                         :email     nil
+                         :token     nil})
 
 (defmacro with-defaults
   [options & body]
@@ -47,19 +48,24 @@
   in our `api-call` function.
 
   Combines the passed in URL args and form data with some basic defaults for headers."
-  [method end-point positional-args query]
+  [{:keys [method end-point positional-args query url]}]
   (let [{:keys [email token]} defaults
         auth-creds [(str email "/token") token]
-        req {:url        (format-url (str end-point ".json") positional-args)
-             :basic-auth auth-creds
-                         :accept :json
-                         :content-type :json
-                         :method method}
+        req {:url          (or url
+                               (format-url (str end-point ".json") positional-args))
+             :basic-auth   auth-creds
+             :accept       :json
+             :content-type :json
+             :method       (or method :get)}
         underscorified-query (underscorify-map query)
         form-or-query-params (if (#{:post :put :delete} method)
                                :form-params
-                               :query-params)]
-    (assoc req form-or-query-params underscorified-query)))
+                               :query-params)
+        req (assoc req form-or-query-params underscorified-query)]
+    (-> req request
+        :body
+        (parse-string true)
+        kebabify-map)))
 
 
 (defn api-call
@@ -70,20 +76,19 @@
   ([method end-point] (api-call method end-point nil {}))
   ([method end-point positional-args] (api-call method end-point positional-args {}))
   ([method end-point positional-args query]
-     (let [req (make-request method end-point positional-args (or query {}))]
-       (-> req request
-               :body
-               (parse-string true)
-               kebabify-map))))
+   (make-request {:method          method
+                  :end-point       end-point
+                  :positional-args positional-args
+                  :query           (or query {})})))
 
 
 (defprotocol StandardOperations
   "Many resources have a standard range of things you can do with them (CRUD, basically)."
-  (get-all [_ ])
+  (get-all [_])
   (get-one [_ id])
-  (create  [_ data])
-  (update  [_ id data])
-  (delete  [_ id]))
+  (create [_ data])
+  (update [_ id data])
+  (delete [_ id]))
 
 (defn base-url
   "Takes in e.g. :users and returns \"users\". Or :ticket-fields and
@@ -116,7 +121,15 @@
   StandardOperations
 
   (get-all [_]
-    ((plural resource-name) (api-call :get (base-url resource-name))))
+    (let [initial-response (api-call :get (base-url resource-name))
+          handle-pagination (fn handle-pages [resp]
+                              (let [next-page (:next-page resp)
+                                    resources ((plural resource-name) resp)]
+                                (if next-page
+                                  (lazy-cat resources
+                                            (handle-pages (make-request {:url next-page})))
+                                  resources)))]
+      (handle-pagination initial-response)))
   (get-one [_ id]
     ((singular resource-name) (api-call :get (str (base-url resource-name) "/%s") [id])))
   (create [_ data]
@@ -151,7 +164,7 @@
   [& args]
   `(do
      ~@(for [resource args]
-      `(defresource ~resource))))
+         `(defresource ~resource))))
 
 
 ;; Define a bunch of resources. These are ones where standard operations Just Work™

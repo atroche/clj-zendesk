@@ -8,5 +8,6 @@
                  [clj-http "1.0.1"]
                  [inflections "0.9.13"]
                  [com.cemerick/url "0.1.1"]
+                 [org.clojure/tools.trace "0.7.8"]
                  [camel-snake-kebab "0.2.5" :exclusions  [org.clojure/clojure]]
                  [cheshire "5.4.0"]])
