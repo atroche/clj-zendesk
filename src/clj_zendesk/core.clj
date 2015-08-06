@@ -21,19 +21,15 @@
             [camel-snake-kebab.core :refer [->snake_case ->CamelCase]]
             [cheshire.core :refer [generate-string parse-string]]))
 
-(defn setup
-  "Tells the client which account you want to query against, and sets up the basic-auth
-  headers used by all API calls.
+(def ^:dynamic defaults {:domain "zendesk.com"
+                         :subdomain nil
+                         :email nil
+                         :token nil})
 
-  This isn't a great solution. It introduces global state and makes many of the functions
-  in this library even *less* pure than they could be. Other projects like the GitHub API
-  client tentacles pass the auth-creds into every API call. I'd like to get the best of
-  both worlds at some stage. Suggestions welcome =)"
-
-  [subdomain domain email token]
-  (def auth-creds [(str email "/token") token])
-  (def api-url (format "https://%s.%s/api/v2/" subdomain domain)))
-
+(defmacro with-defaults
+  [options & body]
+  `(binding [defaults ~options]
+     ~@body))
 
 (defn format-url
   "Creates a URL out of end-point and positional-args (i.e. values to put in the URL).
@@ -41,7 +37,10 @@
 
   E.g. `(format-url \"/users/%s.json\" [3]) returns \"/users/3.json\""
   [end-point positional-args]
-  (str api-url (apply format end-point (map url/url-encode positional-args))))
+  (let [{:keys [subdomain domain]} defaults
+        api-url
+        (format "https://%s.%s/api/v2/" subdomain domain)]
+    (str api-url (apply format end-point (map url/url-encode positional-args)))))
 
 (defn make-request
   "Prepares a map representing a request for passing into `clj-http.client/request`
@@ -49,11 +48,13 @@
 
   Combines the passed in URL args and form data with some basic defaults for headers."
   [method end-point positional-args query]
-  (let [req {:url (format-url (str end-point ".json") positional-args)
+  (let [{:keys [email token]} defaults
+        auth-creds [(str email "/token") token]
+        req {:url        (format-url (str end-point ".json") positional-args)
              :basic-auth auth-creds
-             :accept :json
-             :content-type :json
-             :method method}
+                         :accept :json
+                         :content-type :json
+                         :method method}
         underscorified-query (underscorify-map query)
         form-or-query-params (if (#{:post :put :delete} method)
                                :form-params
