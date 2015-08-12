@@ -86,9 +86,9 @@
   "Many resources have a standard range of things you can do with them (CRUD, basically)."
   (get-all [_])
   (get-one [_ id])
-  (create [_ data])
-  (update [_ id data])
-  (delete [_ id]))
+  (create-one [_ data])
+  (update-one [_ id data])
+  (delete-one [_ id]))
 
 (defn base-url
   "Takes in e.g. :users and returns \"users\". Or :ticket-fields and
@@ -122,6 +122,7 @@
 
   (get-all [_]
     (let [initial-response (api-call :get (base-url resource-name))
+          ; better with letfn?
           handle-pagination (fn handle-pages [resp]
                               (let [next-page (:next-page resp)
                                     resources ((plural resource-name) resp)]
@@ -132,12 +133,12 @@
       (handle-pagination initial-response)))
   (get-one [_ id]
     ((singular resource-name) (api-call :get (str (base-url resource-name) "/%s") [id])))
-  (create [_ data]
+  (create-one [_ data]
     ((singular resource-name) (api-call :post
                                         (base-url resource-name)
                                         nil
                                         {(singular resource-name) data})))
-  (delete [_ id]
+  (delete-one [_ id]
     (api-call :delete (str (base-url resource-name) "/%s") [id])))
 
 

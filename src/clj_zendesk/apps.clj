@@ -13,11 +13,11 @@
   "Upload a new zip file package for an app.
   Returns an upload id which can be used to create or update an app."
   [app-zip-path]
-  (let [response  (post (str api-url "apps/uploads.json")
-        {:basic-auth auth-creds
-                        :multipart [{:name "uploaded_data"
-                                     :mime-type "application/octet-stream"
-                                     :content (clojure.java.io/file app-zip-path)}]})]
+  (let [response (post (str api-url "apps/uploads.json")
+                       {:basic-auth auth-creds
+                        :multipart  [{:name      "uploaded_data"
+                                      :mime-type "application/octet-stream"
+                                      :content   (clojure.java.io/file app-zip-path)}]})]
     (-> response
         :body
         (parse-string true)
@@ -27,8 +27,8 @@
   "Takes upload ID, enqueues app creation, returns job id"
   [upload-id app-name short-description]
   (let [response (post (str api-url "apps.json")
-        {:basic-auth auth-creds
-         :body ()})]
+                       {:basic-auth auth-creds
+                        :body       ()})]
     (-> response
         :body
         (parse-string true)
@@ -38,14 +38,14 @@
   "Takes upload ID, enqueues app creation, returns job id"
   [job-id]
   (let [response (http/get (str api-url (str "job_statuses/" job-id ".json"))
-        {:basic-auth auth-creds})]
+                           {:basic-auth auth-creds})]
     (-> response
         :body
         (parse-string true))))
 
-(api-call :post "apps.json" nil {:name "RQO via API"
+(api-call :post "apps.json" nil {:name              "RQO via API"
                                  :short-description "this is via the API"
-                                 :upload-id 5487})
+                                 :upload-id         5487})
 
 (setup "alistair-pod101" "aroche@zendesk.com" "HAdMqK6wHALLIRaVxxTdvYq6zXiZOrSsKCV0bO5Z")
 
