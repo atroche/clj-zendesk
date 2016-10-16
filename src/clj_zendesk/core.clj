@@ -115,7 +115,8 @@
 
 ;; `delete` corresponds to a GET on a specific resource (e.g. /api/v2//users/3.json)
 
-;; I haven't implemented `update` yet because I forgot and haven't had time!
+;; `update` corresponds to a PUT on a specific resource (e.g. /api/v2/users/3.json)
+
 (defrecord Resource
   [resource-name]
   StandardOperations
@@ -139,7 +140,13 @@
                                         nil
                                         {(singular resource-name) data})))
   (delete-one [_ id]
-    (api-call :delete (str (base-url resource-name) "/%s") [id])))
+    (api-call :delete (str (base-url resource-name) "/%s") [id]))
+  (update-one [_ id data]
+    (api-call :put
+              (str (base-url resource-name) "/%s")
+              [id]
+              {(singular resource-name) data})))
+
 
 
 (defmacro defresource

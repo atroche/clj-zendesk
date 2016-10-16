@@ -1,4 +1,4 @@
-(defproject clj-zendesk "0.3.0-SNAPSHOT"
+(defproject clj-zendesk "0.3.0"
   :description "Zendesk REST API client for Clojure"
   :url "https://github.com/atroche/clj-zendesk"
   :license {:name "Eclipse Public License"
