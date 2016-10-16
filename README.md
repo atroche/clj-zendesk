@@ -6,10 +6,11 @@ Check out this [extensively annotated source code / documentation](http://atroch
 
 It currently only supports the following operations:
 
-   * ```create```
-   * ```get``` (aka “show”)
+   * ```create-one```
+   * ```get-one``` (aka “show”)
    * `get-all` (aka “list”)
-   * `delete`
+   * `delete-one`
+   * `update-one`
 
 …on the following resources: tickets, views, ticket fields, users, macros, automations, triggers, targets, user fields and groups.
 
@@ -21,24 +22,27 @@ Currently only supports auth-ing via OAuth token.
 
 ## Installation
 
-Just add ```[clj-zendesk "0.1.0"]``` to `:dependencies` in your project's `profile.clj`.
+Just add ```[clj-zendesk "0.3.0"]``` to `:dependencies` in your project's `profile.clj`.
 
 ## Usage
 
 ```clojure
 user> (use 'clj-zendesk.core)
-user> (setup "zendesk_subdomain" "zendesk.com" "zendesk_email@zendesk.com" "YOURAPITOKEN")
-user> (get-all Users)
+user> (with-defaults {:domain    "zendesk.com"
+                :subdomain "<YOUR ZENDESK SUBDOMAIN>"
+                :email     "<YOUR ZENDESK EMAIL>"
+                :token "<YOUR ZENDESK TOKEN>"}
+  (get-all Users))
 [{:role "end-user", :updated-at "2013-11-29T00:16:30Z", :tags [], :email "end@user.com", :chat-only false,  … etc.
 
 
-user=> (def my-new-ticket (create Ticket {:subject "Help me!" :comment {:body "my app is broken!"} }))
+user=> (def my-new-ticket (with-defaults {...} (create Ticket {:subject "Help me!" :comment {:body "my app is broken!"} })))
 {:description "my app is broken!", :updated-at "2014-12-19T08:48:11Z", :assignee-id nil, :tags [], :custom-fields [{:id 24146696, :value nil} {:id 24099383, :value nil} {:id 24056003, :value nil}], :group-id 21407398, :via {:channel "api", :source {:from {}, :to {}, :rel nil}}, :has-incidents false, :fields [{:id 24146696, :value nil} {:id 24099383, :value nil} {:id 24056003, :value nil}], :recipient nil, :type nil, :organization-id 29244208, :sharing-agreement-ids [], :requester-id 533561168, :external-id nil, :satisfaction-rating nil, :priority nil, :status "new", :id 12, :problem-id nil, :ticket-form-id nil, :url "https://zendesk_subdomain.zendesk.com/api/v2/tickets/12.json", :collaborator-ids [], :raw-subject "Help me!", :created-at "2014-12-19T08:48:11Z", :subject "Help me!", :forum-topic-id nil, :due-at nil, :submitter-id 533561168}
 
 user=> (:id my-new-ticket)
 12
 
-user=> (get-one Ticket 12)
+user=> (with-defaults {...} (get-one Ticket 12))
 {:description "my app is broken!", :updated-at "2014-12-19T08:48:11Z", :assignee-id nil, :tags [], :custom-fields [{:id 24146696, :value nil} {:id 24099383, :value nil} {:id 24056003, :value nil}], :group-id 21407398, :via {:channel "api", :source {:from {}, :to {}, :rel nil}}, :has-incidents false, :fields [{:id 24146696, :value nil} {:id 24099383, :value nil} {:id 24056003, :value nil}], :recipient nil, :type nil, :organization-id 29244208, :sharing-agreement-ids [], :requester-id 533561168, :external-id nil, :satisfaction-rating nil, :priority nil, :status "new", :id 12, :problem-id nil, :ticket-form-id nil, :url "https://zendesk_subdomain.zendesk.com/api/v2/tickets/12.json", :collaborator-ids [], :raw-subject "Help me!", :created-at "2014-12-19T08:48:11Z", :subject "Help me!", :forum-topic-id nil, :due-at nil, :submitter-id 533561168}
 ```
 
